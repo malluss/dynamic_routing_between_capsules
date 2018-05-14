@@ -39,16 +39,19 @@ def main():
 
     # Load the MNIST dataset
     train, test = chainer.datasets.get_mnist(ndim=3)
+    train = train[0:1000]
+    test = test[0:100]
+    print('Number of training data: %i, Number of test data: %i'%(len(train), len(test)))
     train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
     test_iter = chainer.iterators.SerialIterator(test, 100,
                                                  repeat=False, shuffle=False)
 
     def report(epoch, result):
         mode = 'train' if chainer.config.train else 'test '
-        print('epoch {:2d}\t{} mean loss: {}, accuracy: {}'.format(
+        print('epoch {:2d}\t{} mean loss: {:6f}, accuracy: {:6f}'.format(
             train_iter.epoch, mode, result['mean_loss'], result['accuracy']))
         if args.reconstruct:
-            print('\t\t\tclassification: {}, reconstruction: {}'.format(
+            print('\t\t\tclassification: {:6f}, reconstruction: {:6f}'.format(
                 result['cls_loss'], result['rcn_loss']))
 
     best = 0.
